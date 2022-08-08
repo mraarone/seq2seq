@@ -1,0 +1,79 @@
+FROM pytorch/pytorch
+
+# Install Docker for Docker-in-Docker
+RUN apt-get update && \
+    apt-get -qy full-upgrade && \
+    apt-get install -qy curl && \
+    curl -sSL https://get.docker.com/ | sh
+
+# Install Libraries
+RUN apt-get install sudo
+
+# Set up the Python environment and app location Note: You can't get away from the workspaces folder, 
+# The environment variable, "CODESPACES_VIRTUAL_FOLDER," isn't known to be changeable. The project file 
+# folders will be copied automatically, by codespaces, over this copy. But it is necessary for the build.
+WORKDIR ${containerWorkspaceFolder}
+ADD . ${containerWorkspaceFolder}
+
+# Install Virtual Environment requirements
+RUN apt-get install python3-venv -y
+
+# RUN python3 -m pip install virtualenv
+ENV VIRTUAL_ENV=.venv
+RUN python3 -m venv $VIRTUAL_ENV
+RUN . .venv/bin/activate
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+### The rest installs in the virtual environment. ###
+# RUN apt-get install apt-utils -y
+RUN apt-get update -y
+
+# Install tzdata, it's not on Ubuntu, but is on CentOS and Debian.
+# The sphinx install, below, requires tzdata.
+# https://dev.to/0xbf/set-timezone-in-your-docker-image-d22
+ENV TZ="America/Chicago"
+# RUN apt-get install -yq tzdata 
+#&& \
+#    ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime && \
+#    dpkg-reconfigure -f noninteractive tzdata
+
+# Install Git 
+RUN apt-get install git -y
+
+# Install Java for SonarLint
+# RUN apt-get install openjdk-11-jre -y
+# RUN apt-get install openjdk-11-jre-headless -y
+
+# RUN apt-get install python3-sphinx -y
+
+RUN python3 -m pip install --upgrade pip
+
+# RUN python3 -m pip install wheel
+# RUN python3 -m pip install setuptools make pre-commit isort bandit black mypy
+# RUN python3 -m pip install pylint safety liccheck coverage[toml] codecarbon wandb
+# RUN python3 -m pip install flake8 flake8-annotations-complexity flake8-cognitive-complexity flake8-expression-complexity flake8-functions
+# RUN python3 -m pip install sphinx 
+# RUN python3 -m pip install sphinx-autodoc-typehints
+# RUN python3 -m pip install xdoctest
+RUN python3 -m pip install pre-commit
+RUN git init
+RUN which pre-commit && sleep 5
+RUN echo "Current working directory: $(pwd)" && sleep 5
+RUN pre-commit install
+RUN cat /root/.cache/pre-commit/pre-commit.log
+
+# RUN python3 -m pip install -r requirements.txt
+
+# Install sound analysis libraries
+# RUN apt-get install libsndfile1 -y
+# RUN python3 -m pip install librosa
+
+# GitHub CodeSpaces does not use entrypoint.sh, it runs its own using the devcontainer configuration.
+# When CodeSpaces does that, it detects and automatically activates the detected virtual environment,
+# and sets the python intrepretor to that virtual environment.
+#
+# But, for docker on a developer's PC, the following gets executed.
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+#ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/bash"]

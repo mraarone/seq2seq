@@ -1,0 +1,13 @@
+torch
+spacey
+torchtext
+
+numpy
+scikit-learn
+scipy
+
+matplotlib
+seaborn
+bokeh
+ggplot
+

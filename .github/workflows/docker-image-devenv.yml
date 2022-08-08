@@ -1,0 +1,25 @@
+name: Docker Image CI
+on: 
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'dockerfiles/Dockerfile.devenv'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      env:
+        SECRETS_DOCKER_USER: ${{ secrets.SECRETS_DOCKER_USER }}
+        SECRETS_DOCKER_PASS: ${{ secrets.SECRETS_DOCKER_PASS }}
+        SECRETS_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      run: scripts/build-image-devenv.sh --push
+
+
+

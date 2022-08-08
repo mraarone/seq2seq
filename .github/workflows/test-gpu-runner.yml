@@ -1,0 +1,10 @@
+name: Test GPU Runner
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: [self-hosted, linux, x64, gpu]
+
+    steps:
+    - name: Test GPU Runner
+      run: |
+        nvidia-smi

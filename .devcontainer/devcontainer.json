@@ -1,0 +1,51 @@
+{
+    "name": "seq2seq",
+
+    // This is totally allowed, but VSCode says it isn't, ignore the warning.
+    "image": "mraarone/pytorch-devenv:latest",
+
+    //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
+    //"context": "..",
+
+    // "appPort": 3000,
+
+    "mounts": [
+        "source=//var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached"
+        // ,
+        // "source=//etc/group,target=/etc/group,type=bind,consistency=cached,ro",
+        // "source=//etc/passwd,target=/etc/passwd,type=bind,consistency=cached,ro"
+    ],
+
+    // Default path to open when attaching to a new container.
+    "workspaceFolder": "/workspaces/seq2seq",
+
+    // Stop the container from automatically shutting down when vscode is closed.
+    // stopContainer, stopCompose, and none are the three options.
+    "shutdownAction": "none",
+
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "mechatroner.rainbow-csv",
+        "bierner.markdown-mermaid",
+        "oderwat.indent-rainbow",
+        "SonarSource.sonarlint-vscode",
+        "redhat.vscode-yaml",
+        "ms-vscode.makefile-tools",
+        "GitHub.copilot",
+        "mintlify.document",
+        "eamodio.gitlens"
+    ],
+
+    // An array port numbers to forward
+    // "forwardPorts": [8000],
+
+    // Container user VS Code should use when connecting
+    "remoteUser": "root",
+
+    // Set environment variables for VS Code and sub-processes
+    "remoteEnv": {
+        "JAVA_HOME": "/usr/lib/jvm/java-1.11.0-openjdk-amd64"
+    }
+}
