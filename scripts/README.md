@@ -2,7 +2,7 @@
 
 Run dockerfiles/Dockerfile.devenv on your desktop using build.sh and run.sh.
 
-## Set up your environment:
+## Set up your environment
 
 I created my own process that doesn't require other software that works with Windows Docker Desktop 4.11.1 (84025), and Ubuntu 20.04.
 
@@ -21,9 +21,9 @@ I created my own process that doesn't require other software that works with Win
 10. [DOCKER DEVENV ] ssh-keyscan github.com >> ~/.ssh/known_hosts
 11. [DOCKER DEVENV ] git clone git@github.com:mraarone/seq2seq.git
 
-References:
+## References
 
-*https://stackoverflow.com/questions/67178239/ssh-forwarding-using-wsl2-and-vs-code-containers-on-windows
-*https://github.com/microsoft/vscode-remote-release/issues/2925#issuecomment-652558889
-*https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-*https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+* https://stackoverflow.com/questions/67178239/ssh-forwarding-using-wsl2-and-vs-code-containers-on-windows
+* https://github.com/microsoft/vscode-remote-release/issues/2925#issuecomment-652558889
+* https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+* https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
