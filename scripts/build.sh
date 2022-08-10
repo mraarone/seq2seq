@@ -6,5 +6,5 @@ docker buildx build \
 	--push \
 	-t "pytorch-devenv:latest" \
 	-t "pytorch-devenv:$(date +%s)" \
-	-f dockerfiles/Dockerfile.devenv
+	-f dockerfiles/Dockerfile.devenv \
 	.
