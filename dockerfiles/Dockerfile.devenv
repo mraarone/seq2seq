@@ -40,7 +40,7 @@ RUN apt-get install -yq tzdata && \
 RUN apt-get install git -y
 RUN apt-get install openssh-client -y
 
-ADD . ${containerWorkspaceFolder}
+# ADD . ${containerWorkspaceFolder}
 
 # Setup the environment so that scripts/run.sh can be run using SSH key forwarding.
 # WSL2 SSH key forwarding must be enabled in /etc/ssh_config or ~/.ssh/config
