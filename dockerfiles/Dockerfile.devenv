@@ -9,23 +9,8 @@ RUN apt-get update && \
 # Install Libraries
 RUN apt-get install sudo
 
-# Set up the Python environment and app location Note: You can't get away from the workspaces folder, 
-# The environment variable, "CODESPACES_VIRTUAL_FOLDER," isn't known to be changeable. The project file 
-# folders will be copied automatically, by codespaces, over this copy. But it is necessary for the build.
-# /workspaces/seq2seq = ${containerWorkspaceFolder}
-WORKDIR /workspaces/seq2seq
-
-# Install Virtual Environment requirements
-RUN apt-get install python3-venv -y
-
-# RUN python3 -m pip install virtualenv
-ENV VIRTUAL_ENV=.venv
-RUN python3 -m venv $VIRTUAL_ENV
-RUN . .venv/bin/activate
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
 ### The rest installs in the virtual environment. ###
-# RUN apt-get install apt-utils -y
+RUN apt-get install apt-utils -y
 RUN apt-get update -y
 
 # Install tzdata, it's not on Ubuntu, but is on CentOS and Debian.
@@ -40,14 +25,36 @@ RUN apt-get install -yq tzdata && \
 RUN apt-get install git -y
 RUN apt-get install openssh-client -y
 
-# ADD . ${containerWorkspaceFolder}
-
 # Setup the environment so that scripts/run.sh can be run using SSH key forwarding.
 # WSL2 SSH key forwarding must be enabled in /etc/ssh_config or ~/.ssh/config
 # Keys must be installed in WSL 2 (tested on Ubuntu 20.04) at .ssh/id_rsa, id_ed25519, etc.
-# and ssh-agent must be running, like with the command below. This runs on logon.
-RUN echo 'eval $(ssh-agent -s); ssh-add' >> /root/.bashrc
+# and ssh-agent must be running, like with the ssh-agent/add commands below. This runs on logon.
+RUN mkdir /root/.ssh
+RUN echo 'eval $(ssh-agent -s)' >> /root/.bashrc
+RUN echo 'ssh-add' >> /root/.bashrc
+RUN echo 'ssh-keyscan github.com >> ~/.ssh/known_hosts' >> /root/.bashrc
 
+# Install Java for SonarLint
+# RUN apt-get install openjdk-11-jre -y
+RUN apt-get install openjdk-11-jre-headless -y
+
+# Install sphinx libraries for constant documentation
+RUN apt-get install python3-sphinx -y
+
+# Upgrade pip
+RUN python3 -m pip install --upgrade pip
+
+# Install common python tools for open source DevSecOps
+RUN python3 -m pip install make wheel
+RUN python3 -m pip install setuptools make pre-commit isort bandit black mypy
+RUN python3 -m pip install pylint safety liccheck coverage[toml] codecarbon wandb
+RUN python3 -m pip install flake8 flake8-annotations-complexity flake8-cognitive-complexity flake8-expression-complexity flake8-functions
+RUN python3 -m pip install sphinx 
+RUN python3 -m pip install sphinx-autodoc-typehints
+RUN python3 -m pip install xdoctest
+RUN python3 -m pip install pre-commit
+
+## GitHub
 # To run the below git commands and be authorized using ssh, the keys 
 # from above must  be in GitHub under Account Settings > SSH Keys.
 
@@ -64,10 +71,11 @@ RUN echo 'eval $(ssh-agent -s); ssh-add' >> /root/.bashrc
 # git branch -M main
 # git push -u origin main
 
-## Clone a repository
-# git clone git@github.com:mraarone/seq2seq.git
+## Clone a repository via HTTPS
+RUN git clone https://git@github.com/mraarone/seq2seq.git
 
-## Connect via SSH to pull the repository, use VSCode started from WSL2 in Windows
+## Clone a repository via SSH
+# Connect via SSH to pull the repository, use VSCode started from WSL2 in Windows
 #
 # This may require SSH keys, and a GitHub->Settings->Developer->SSH Keys configuration
 # ssh-agent configuration for local docker and local VSCode will help follow this link:
@@ -78,29 +86,23 @@ RUN echo 'eval $(ssh-agent -s); ssh-add' >> /root/.bashrc
 # If so, restart the process to generate a key and upload it to GitHub:
 # https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 # https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
-RUN mkdir /root/.ssh
-RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
-RUN git clone git@github.com:mraarone/seq2seq.git
+# RUN git clone git@github.com:mraarone/seq2seq.git
 
-# Install Java for SonarLint
-# RUN apt-get install openjdk-11-jre -y
-RUN apt-get install openjdk-11-jre-headless -y
+# Set up the Python environment and app location Note: You can't get away from the workspaces folder, 
+# The environment variable, "CODESPACES_VIRTUAL_FOLDER," isn't known to be changeable. The project file 
+# folders will be copied automatically, by codespaces, over this copy. But it is necessary for the build.
+# /workspace/seq2seq = ${containerWorkspaceFolder}
 
-# Install sphinx libraries for constant documentation
-RUN apt-get install python3-sphinx -y
+WORKDIR /workspace/seq2seq
 
-# Upgrade pip
-RUN python3 -m pip install --upgrade pip
+# Install Virtual Environment requirements
+RUN apt-get install python3-venv -y
 
-# Install common python tools for open source DevSecOps
-RUN python3 -m pip install wheel
-RUN python3 -m pip install setuptools make pre-commit isort bandit black mypy
-RUN python3 -m pip install pylint safety liccheck coverage[toml] codecarbon wandb
-RUN python3 -m pip install flake8 flake8-annotations-complexity flake8-cognitive-complexity flake8-expression-complexity flake8-functions
-RUN python3 -m pip install sphinx 
-RUN python3 -m pip install sphinx-autodoc-typehints
-RUN python3 -m pip install xdoctest
-RUN python3 -m pip install pre-commit
+# RUN python3 -m pip install virtualenv
+ENV VIRTUAL_ENV=.venv
+RUN python3 -m venv $VIRTUAL_ENV
+RUN . .venv/bin/activate
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install precommit hooks.
 RUN pre-commit install
