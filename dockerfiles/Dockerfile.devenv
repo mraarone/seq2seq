@@ -32,16 +32,24 @@ RUN apt-get update -y
 # The sphinx install, below, requires tzdata.
 # https://dev.to/0xbf/set-timezone-in-your-docker-image-d22
 ENV TZ="America/Chicago"
-# RUN apt-get install -yq tzdata 
-#&& \
-#    ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime && \
-#    dpkg-reconfigure -f noninteractive tzdata
+RUN apt-get install -yq tzdata && \
+    ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 # Install Git 
 RUN apt-get install git -y
 RUN apt-get install openssh-client -y
 
 ADD . ${containerWorkspaceFolder}
+
+# Setup the environment so that scripts/run.sh can be run using SSH key forwarding.
+# WSL2 SSH key forwarding must be enabled in /etc/ssh_config or ~/.ssh/config
+# Keys must be installed in WSL 2 (tested on Ubuntu 20.04) at .ssh/id_rsa, id_ed25519, etc.
+# and ssh-agent must be running, like with the command below. This runs on logon.
+RUN echo 'eval $(ssh-agent -s); ssh-add' >> /root/.bashrc
+
+# To run the below git commands and be authorized using ssh, the keys 
+# from above must  be in GitHub under Account Settings > SSH Keys.
 
 ## Initialize a repository
 # git init
@@ -70,32 +78,35 @@ ADD . ${containerWorkspaceFolder}
 # If so, restart the process to generate a key and upload it to GitHub:
 # https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 # https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
-# RUN git pull git@github.com:mraarone/seq2seq.git
-
-# ssh-keyscan github.com >> ~/.ssh/known_hosts
-
+RUN mkdir /root/.ssh
+RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
+RUN git clone git@github.com:mraarone/seq2seq.git
 
 # Install Java for SonarLint
 # RUN apt-get install openjdk-11-jre -y
-# RUN apt-get install openjdk-11-jre-headless -y
+RUN apt-get install openjdk-11-jre-headless -y
 
-# RUN apt-get install python3-sphinx -y
+# Install sphinx libraries for constant documentation
+RUN apt-get install python3-sphinx -y
 
+# Upgrade pip
 RUN python3 -m pip install --upgrade pip
 
-# RUN python3 -m pip install wheel
-# RUN python3 -m pip install setuptools make pre-commit isort bandit black mypy
-# RUN python3 -m pip install pylint safety liccheck coverage[toml] codecarbon wandb
-# RUN python3 -m pip install flake8 flake8-annotations-complexity flake8-cognitive-complexity flake8-expression-complexity flake8-functions
-# RUN python3 -m pip install sphinx 
-# RUN python3 -m pip install sphinx-autodoc-typehints
-# RUN python3 -m pip install xdoctest
+# Install common python tools for open source DevSecOps
+RUN python3 -m pip install wheel
+RUN python3 -m pip install setuptools make pre-commit isort bandit black mypy
+RUN python3 -m pip install pylint safety liccheck coverage[toml] codecarbon wandb
+RUN python3 -m pip install flake8 flake8-annotations-complexity flake8-cognitive-complexity flake8-expression-complexity flake8-functions
+RUN python3 -m pip install sphinx 
+RUN python3 -m pip install sphinx-autodoc-typehints
+RUN python3 -m pip install xdoctest
+RUN python3 -m pip install pre-commit
 
-#RUN python3 -m pip install pre-commit
+# Install precommit hooks.
+RUN pre-commit install
 
-#RUN pre-commit install
-
-# RUN python3 -m pip install -r requirements.txt
+# Install requirements from repo.
+RUN python3 -m pip install -r requirements.txt
 
 # Install sound analysis libraries
 # RUN apt-get install libsndfile1 -y
@@ -106,8 +117,6 @@ RUN python3 -m pip install --upgrade pip
 # and sets the python intrepretor to that virtual environment.
 #
 # But, for docker on a developer's PC, the following gets executed.
-
-#COPY entrypoint.sh /entrypoint.sh
-#RUN chmod +x /entrypoint.sh
-#ENTRYPOINT ["/entrypoint.sh"]
-#ENTRYPOINT ["/usr/bin/bash"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
