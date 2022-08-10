@@ -12,8 +12,8 @@ RUN apt-get install sudo
 # Set up the Python environment and app location Note: You can't get away from the workspaces folder, 
 # The environment variable, "CODESPACES_VIRTUAL_FOLDER," isn't known to be changeable. The project file 
 # folders will be copied automatically, by codespaces, over this copy. But it is necessary for the build.
-WORKDIR ${containerWorkspaceFolder}
-ADD . ${containerWorkspaceFolder}
+# /workspaces/seq2seq = ${containerWorkspaceFolder}
+WORKDIR /workspaces/seq2seq
 
 # Install Virtual Environment requirements
 RUN apt-get install python3-venv -y
@@ -39,6 +39,41 @@ ENV TZ="America/Chicago"
 
 # Install Git 
 RUN apt-get install git -y
+RUN apt-get install openssh-client -y
+
+ADD . ${containerWorkspaceFolder}
+
+## Initialize a repository
+# git init
+# git add README.md
+# git commit -m "first commit"
+# git branch -M main
+# git remote add origin git@github.com:mraarone/seq2seq.git
+# git push -u origin main
+
+## Push existing repository from the commnd line
+# git remote add origin git@github.com:mraarone/seq2seq.git
+# git branch -M main
+# git push -u origin main
+
+## Clone a repository
+# git clone git@github.com:mraarone/seq2seq.git
+
+## Connect via SSH to pull the repository, use VSCode started from WSL2 in Windows
+#
+# This may require SSH keys, and a GitHub->Settings->Developer->SSH Keys configuration
+# ssh-agent configuration for local docker and local VSCode will help follow this link:
+# https://code.visualstudio.com/docs/remote/containers#_using-ssh-keys
+#
+# "Host key verification failed" will happen if you have a password for your id_ed25519 file.
+# Don't have a passord for the ~/.ssh/id_* private key file used for GitHub rights.
+# If so, restart the process to generate a key and upload it to GitHub:
+# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+# RUN git pull git@github.com:mraarone/seq2seq.git
+
+# ssh-keyscan github.com >> ~/.ssh/known_hosts
+
 
 # Install Java for SonarLint
 # RUN apt-get install openjdk-11-jre -y
@@ -55,12 +90,10 @@ RUN python3 -m pip install --upgrade pip
 # RUN python3 -m pip install sphinx 
 # RUN python3 -m pip install sphinx-autodoc-typehints
 # RUN python3 -m pip install xdoctest
-RUN python3 -m pip install pre-commit
-RUN git init
-RUN which pre-commit && sleep 5
-RUN echo "Current working directory: $(pwd)" && sleep 5
-RUN pre-commit install
-RUN cat /root/.cache/pre-commit/pre-commit.log
+
+#RUN python3 -m pip install pre-commit
+
+#RUN pre-commit install
 
 # RUN python3 -m pip install -r requirements.txt
 
@@ -73,7 +106,8 @@ RUN cat /root/.cache/pre-commit/pre-commit.log
 # and sets the python intrepretor to that virtual environment.
 #
 # But, for docker on a developer's PC, the following gets executed.
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+
+#COPY entrypoint.sh /entrypoint.sh
+#RUN chmod +x /entrypoint.sh
 #ENTRYPOINT ["/entrypoint.sh"]
-ENTRYPOINT ["/usr/bin/bash"]
+#ENTRYPOINT ["/usr/bin/bash"]
