@@ -23,6 +23,7 @@ I created my own process that doesn't require other software that works with Win
 
 References:
 
-https://stackoverflow.com/questions/67178239/ssh-forwarding-using-wsl2-and-vs-code-containers-on-windows
-https://github.com/microsoft/vscode-remote-release/issues/2925#issuecomment-652558889
-https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agenthttps://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+*https://stackoverflow.com/questions/67178239/ssh-forwarding-using-wsl2-and-vs-code-containers-on-windows
+*https://github.com/microsoft/vscode-remote-release/issues/2925#issuecomment-652558889
+*https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+*https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
