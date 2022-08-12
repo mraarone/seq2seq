@@ -1,6 +1,12 @@
 #!/bin/env bash
 
-docker run -it --rm \
+# For local mode, optionally to NOT use Docker Desktop on Windows 10+,
+# may consider giving instructions to run this with GPUs from:
+# https://gregbouwens.com/docker-with-gpu-enabled-on-windows/
+
+# Set up ssh-agent to run on yoru local WSL 2 or Ubuntu installation
+# and ssh-agent as per the README.md, and your SSH keys will pass-through.
+docker run -it --rm --gpus all \
 	-v $SSH_AUTH_SOCK:$SSH_AUTH_SOCK \
 	-e SSH_AUTH_SOCK=$SSH_AUTH_SOCK \
 	mraarone/pytorch-devenv:latest
