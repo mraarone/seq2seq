@@ -5,8 +5,8 @@
     "image": "mraarone/pytorch-devenv:latest",
     "runArgs": [
         "--gpus", "all",
-        "-v", "$SSH_AUTH_SOCK:$SSH_AUTH_SOCK",
-        "-e", "SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+        "-v", "${localEnv:SSH_AUTH_SOCK}:${localEnv:SSH_AUTH_SOCK}",
+        "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}"
      ],
     //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
     //"context": "..",
