@@ -6,8 +6,11 @@
     "runArgs": [
         "--gpus", "all",
         "-v", "${localEnv:SSH_AUTH_SOCK}:${localEnv:SSH_AUTH_SOCK}",
-        "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}"
-     ],
+        "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}",
+        "-u", "${localEnv:USER}:${localEnv:USER}"
+    ],
+    "postStartCommand": "bash -c 'adduser -D -g \"\" -s /bin/bash ${localEnv:USER} && echo \"${localEnv:USER} ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers'",
+
     //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
     //"context": "..",
 

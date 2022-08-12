@@ -30,8 +30,6 @@ RUN apt-get install openssh-client -y
 # Keys must be installed in WSL 2 (tested on Ubuntu 20.04) at .ssh/id_rsa, id_ed25519, etc.
 # and ssh-agent must be running, like with the ssh-agent/add commands below. This runs on logon.
 RUN mkdir /root/.ssh
-RUN echo 'eval $(ssh-agent -s)' >> /root/.bashrc
-RUN echo 'ssh-add' >> /root/.bashrc
 RUN echo 'ssh-keyscan github.com >> ~/.ssh/known_hosts' >> /root/.bashrc
 
 # Install Java for SonarLint
@@ -121,4 +119,7 @@ RUN python3 -m pip install -r requirements.txt
 # But, for docker on a developer's PC, the following gets executed.
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+RUN chown -R root:root /workspace
+
 ENTRYPOINT ["/entrypoint.sh"]
