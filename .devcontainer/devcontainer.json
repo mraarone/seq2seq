@@ -3,7 +3,9 @@
 
     // This is totally allowed, but VSCode says it isn't, ignore the warning.
     "image": "mraarone/pytorch-devenv:latest",
-
+    "runArgs": [
+        "--gpus", "all"
+    ],
     //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
     //"context": "..",
 
