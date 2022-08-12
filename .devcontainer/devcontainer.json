@@ -7,9 +7,13 @@
         "--gpus", "all",
         "-v", "${localEnv:SSH_AUTH_SOCK}:${localEnv:SSH_AUTH_SOCK}",
         "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}",
-        "-u", "${localEnv:USER}:${localEnv:USER}"
+        "-u", "${localEnv:UID}:${localEnv:GID}",
+        "-v", "/etc/group:/etc/group:ro",
+        "-v", "/etc/passwd:/etc/passwd:ro",
+        "-v", "/etc/shadow:/etc/shadow:ro"
     ],
-    "postStartCommand": "bash -c 'adduser -D -g \"\" -s /bin/bash ${localEnv:USER} && echo \"${localEnv:USER} ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers'",
+    "postCreateCommand": "git config --global --add safe.directory /workspaces/seq2seq",
+    "postStartCommand": "echo '${localEnv:USER} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers",
 
     //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
     //"context": "..",
@@ -23,12 +27,12 @@
         // "source=//etc/passwd,target=/etc/passwd,type=bind,consistency=cached,ro"
     ],
 
-    // Default path to open when attaching to a new container.
-    "workspaceFolder": "/workspaces/seq2seq",
-
     // Stop the container from automatically shutting down when vscode is closed.
     // stopContainer, stopCompose, and none are the three options.
     "shutdownAction": "none",
+
+    // Default path to open when attaching to a new container.
+    "workspaceFolder": "/workspaces/seq2seq",
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
