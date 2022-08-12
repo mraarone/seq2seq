@@ -4,8 +4,10 @@
     // This is totally allowed, but VSCode says it isn't, ignore the warning.
     "image": "mraarone/pytorch-devenv:latest",
     "runArgs": [
-        "--gpus", "all"
-    ],
+        "--gpus", "all",
+        "-v", "$SSH_AUTH_SOCK:$SSH_AUTH_SOCK",
+        "-e", "SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+     ],
     //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
     //"context": "..",
 
