@@ -1,10 +1,10 @@
 repos:
--   repo: https://github.com/Yelp/detect-secrets
-    rev: v1.2.0
-    hooks:
-    -   id: detect-secrets
+- repo: https://github.com/Yelp/detect-secrets
+  rev: v1.2.0
+  hooks:
+  - id: detect-secrets
 #        args: ['--baseline', '.secrets.baseline']
-        exclude: package.lock.json
+    exclude: package.lock.json
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v3.2.0
@@ -46,36 +46,36 @@ repos:
     entry: mypy
     types: [python]
 
- - id: flake8
-   name: flake8
-   stages: [commit]
-   language: system
-   entry: flake8
-   types: [python]
-   exclude: setup.py
+  - id: flake8
+    name: flake8
+    stages: [commit]
+    language: system
+    entry: flake8
+    types: [python]
+    exclude: setup.py
 
- - id: pylint
-   name: pylint
-   stages: [commit]
-   language: system
-   entry: pylint
-   types: [python]
-   exclude: setup.py
+  - id: pylint
+    name: pylint
+    stages: [commit]
+    language: system
+    entry: pylint
+    types: [python]
+    exclude: setup.py
 
- - id: bandit
-   name: bandit
-   stages: [commit]
-   language: system
-   entry: bandit
-   types: [python]
-   exclude: setup.py
+  - id: bandit
+    name: bandit
+    stages: [commit]
+    language: system
+    entry: bandit
+    types: [python]
+    exclude: setup.py
 
- - id: coverage
-   name: coverage
-   stages: [commit]
-   language: system
-   entry: coverage
-   types: [python]
+  - id: coverage
+    name: coverage
+    stages: [commit]
+    language: system
+    entry: coverage
+    types: [python]
 
 - repo: https://github.com/nbQA-dev/nbQA
   rev: 0.7.0
