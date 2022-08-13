@@ -120,6 +120,6 @@ RUN python3 -m pip install -r requirements.txt
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-RUN chown -R root:root /workspace
+# RUN chown -R root:root /workspace
 
 ENTRYPOINT ["/entrypoint.sh"]
