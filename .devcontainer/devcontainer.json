@@ -16,6 +16,7 @@
     ],
     "postCreateCommand": "git config --global --add safe.directory /workspaces/seq2seq",
     "postStartCommand": "echo '${localEnv:USER} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers",
+    "postAttachCommand": "git pull",
 
     //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
     //"context": "..",
