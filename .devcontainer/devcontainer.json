@@ -56,7 +56,7 @@
     // "forwardPorts": [8000],
 
     // Container user VS Code should use when connecting
-    "remoteUser": "root",
+    "remoteUser": "${localEnv:USER}",
 
     // Set environment variables for VS Code and sub-processes
     "remoteEnv": {
