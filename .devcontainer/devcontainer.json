@@ -5,14 +5,14 @@
     "image": "mraarone/pytorch-devenv:latest",
     "runArgs": [
         "--gpus", "all",
+        "-v", "/etc/group:/etc/group:ro",
+        "-v", "/etc/passwd:/etc/passwd:ro",
+        "-v", "/etc/shadow:/etc/shadow:ro"
         "-v", "${localEnv:SSH_AUTH_SOCK}:${localEnv:SSH_AUTH_SOCK}",
         "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}",
         "-u", "${localEnv:UID}:${localEnv:GID}",
         "-v", "/home/${localEnv:USER}/:/home/${localEnv:USER}:ro",
         "-v", "/home/${localEnv:USER}/.gitconfig:/home/${localEnv:USER}/.gitconfig:ro",
-        "-v", "/etc/group:/etc/group:ro",
-        "-v", "/etc/passwd:/etc/passwd:ro",
-        "-v", "/etc/shadow:/etc/shadow:ro"
     ],
     "postCreateCommand": "git config --global --add safe.directory /workspaces/seq2seq",
     "postStartCommand": "echo '${localEnv:USER} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers",
