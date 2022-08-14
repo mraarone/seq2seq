@@ -52,6 +52,8 @@ RUN python3 -m pip install sphinx-autodoc-typehints
 RUN python3 -m pip install xdoctest
 RUN python3 -m pip install pre-commit
 
+WORKDIR /workspaces
+
 ## GitHub
 # To run the below git commands and be authorized using ssh, the keys 
 # from above must  be in GitHub under Account Settings > SSH Keys.
@@ -89,7 +91,7 @@ RUN git clone https://git@github.com/mraarone/seq2seq.git
 # Set up the Python environment and app location Note: You can't get away from the workspaces folder, 
 # The environment variable, "CODESPACES_VIRTUAL_FOLDER," isn't known to be changeable. The project file 
 # folders will be copied automatically, by codespaces, over this copy. But it is necessary for the build.
-# /workspace/seq2seq = ${containerWorkspaceFolder}
+# /workspaces/seq2seq = ${containerWorkspaceFolder}
 
 WORKDIR /workspaces/seq2seq
 
@@ -99,7 +101,7 @@ RUN apt-get install python3-venv -y
 # RUN python3 -m pip install virtualenv
 ENV VIRTUAL_ENV=.venv
 RUN python3 -m venv $VIRTUAL_ENV
-RUN . .venv/bin/activate
+RUN . ./.venv/bin/activate
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install precommit hooks.
