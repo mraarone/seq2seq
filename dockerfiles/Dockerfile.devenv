@@ -91,7 +91,7 @@ RUN git clone https://git@github.com/mraarone/seq2seq.git
 # folders will be copied automatically, by codespaces, over this copy. But it is necessary for the build.
 # /workspace/seq2seq = ${containerWorkspaceFolder}
 
-WORKDIR /workspace/seq2seq
+WORKDIR /workspaces/seq2seq
 
 # Install Virtual Environment requirements
 RUN apt-get install python3-venv -y
