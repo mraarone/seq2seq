@@ -5,33 +5,29 @@
     "image": "mraarone/pytorch-devenv:latest",
     "runArgs": [
         "--gpus", "all",
-        "-v", "/etc/group:/etc/group:ro",
-        "-v", "/etc/passwd:/etc/passwd:ro",
-        "-v", "/etc/shadow:/etc/shadow:ro"
-        "-v", "${localEnv:SSH_AUTH_SOCK}:${localEnv:SSH_AUTH_SOCK}",
-        "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}",
         "-u", "${localEnv:UID}:${localEnv:GID}",
-        "-v", "/home/${localEnv:USER}/:/home/${localEnv:USER}:ro",
-        "-v", "/home/${localEnv:USER}/.gitconfig:/home/${localEnv:USER}/.gitconfig:ro",
+        "-v", "/etc/passwd:/etc/passwd:ro",
+        "-v", "/etc/group:/etc/group:ro",
+        "-v", "/etc/shadow:/etc/shadow:ro",
+        "-v", "/etc/sudoers.d:/etc/sudoers.d:ro",
+        "-v", "${localEnv:SSH_AUTH_SOCK}:${localEnv:SSH_AUTH_SOCK}:ro",
+        "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}:ro"
     ],
-    "postCreateCommand": "git config --global --add safe.directory /workspaces/seq2seq",
-    "postStartCommand": "echo '${localEnv:USER} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers",
-    "postAttachCommand": "git pull",
+    "postCreateCommand": "echo '${localEnv:USER} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers",
+    "postStartCommand": "su -c 'git config --global --add safe.directory /workspaces/seq2seq' ${localEnv:USER}",
+    "postAttachCommand": "su ${localEnv:USER}",
 
+    //// Consider moving to another devenv generation dockerfile for the CI/CD pipeline when the file changes.
     //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
     //"context": "..",
 
-    // "appPort": 3000,
-
     "mounts": [
-        "source=//var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached"
-        // ,
-        // "source=//etc/group,target=/etc/group,type=bind,consistency=cached,ro",
-        // "source=//etc/passwd,target=/etc/passwd,type=bind,consistency=cached,ro"
+        "source=//var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached",
+        "source=/${localEnv:HOME},target=${localEnv:HOME},type=bind,consistency=cached"
     ],
 
     // Stop the container from automatically shutting down when vscode is closed.
-    // stopContainer, stopCompose, and none are the three options.
+    // stopContainer, stopCompose, and none are the three options. This saves files.
     "shutdownAction": "none",
 
     // Default path to open when attaching to a new container.
@@ -51,12 +47,6 @@
         "mintlify.document",
         "eamodio.gitlens"
     ],
-
-    // An array port numbers to forward
-    // "forwardPorts": [8000],
-
-    // Container user VS Code should use when connecting
-    "remoteUser": "${localEnv:USER}",
 
     // Set environment variables for VS Code and sub-processes
     "remoteEnv": {
