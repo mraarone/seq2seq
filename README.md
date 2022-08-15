@@ -1,6 +1,33 @@
 [![Open in Remote - Containers](https://img.shields.io/static/v1?label=Remote%20-%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/mraarone/seq2seq.git)
 
-# Sandbox
+# Seq2Seq Example Hypermodern AI/ML Python Project
+
+# Getting Started with the DevContainer:
+*Compatible with Local Docker, Remote Docker, and GitHub CodeSpaces*
+
+## Option A: Run in Linux
+
+1. Go into WSL 2 in Windows (wsl.exe), or Linux.
+2. Have Docker Desktop in Windows or dockerd in Linux installed.
+3. Clone the repo, and go into the resultant folder.
+4. Copy your .gitconfig into an environment variable, run: 
+```export GITCONFIG=$(< ~/.gitconfig)```
+6. Open VS Code, run:
+```code .```
+8. Take it's suggestions, and you will be logged in as root!
+
+## Option B: Run with GitHub DevContainer Badge.
+
+1. Go to this GitHub page.
+2. Click the badge above.
+3. Take it's suggestions, and you will be logged in as root!
+
+## Option C: Run with CodeSpaces
+
+1. Coming as soon as I upload this project to Huntsville-Open-Source-AI!
+2. ... and you pay me $5 a month + .18 cents per hour, still researching!
+
+## Digging in...
 
 Setup repository remote VSCode in Docker. \
 Furthermore, the following VSCode/python extensions can be used:
