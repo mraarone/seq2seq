@@ -6,16 +6,12 @@
     "runArgs": [
         "--gpus", "all",
         "-u", "${localEnv:UID}:${localEnv:GID}",
-        "-v", "/etc/passwd:/etc/passwd:ro",
-        "-v", "/etc/group:/etc/group:ro",
-        "-v", "/etc/shadow:/etc/shadow:ro",
-        "-v", "/etc/sudoers.d:/etc/sudoers.d:ro",
-        "-v", "${localEnv:SSH_AUTH_SOCK}:${localEnv:SSH_AUTH_SOCK}:ro",
         "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}:ro"
     ],
-    "postCreateCommand": "echo '${localEnv:USER} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers",
-    "postStartCommand": "su -c 'git config --global --add safe.directory /workspaces/seq2seq' ${localEnv:USER}",
-    "postAttachCommand": "su ${localEnv:USER}",
+//    "postCreateCommand": "echo '${localEnv:USER} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers",
+//    "postStartCommand": "git config --global --add safe.directory /workspaces/seq2seq",
+    "postCreateCommand": "su aaron -c 'git config --global --add safe.directory /workspaces/seq2seq'",
+    "postStartCommand": "su ${localEnv:USER}",
 
     //// Consider moving to another devenv generation dockerfile for the CI/CD pipeline when the file changes.
     //"dockerFile": "../Dockerfiles/Dockerfile.devenv",
@@ -23,7 +19,12 @@
 
     "mounts": [
         "source=//var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached",
-        "source=/${localEnv:HOME},target=${localEnv:HOME},type=bind,consistency=cached"
+        "source=//etc/passwd,target=/etc/passwd,type=bind,consistency=cached,ro",
+        "source=//etc/group,target=/etc/group,type=bind,consistency=cached,ro",
+        "source=//etc/shadow,target=/etc/shadow,type=bind,consistency=cached,ro",
+        "source=//etc/sudoers,target=/etc/sudoers,type=bind,consistency=cached,ro",
+        "source=/${localEnv:HOME},target=${localEnv:HOME},type=bind,consistency=cached",
+        "source=/${localEnv:SSH_AUTH_SOCK},target=${localEnv:SSH_AUTH_SOCK},type=bind,consistency=cached,ro"
     ],
 
     // Stop the container from automatically shutting down when vscode is closed.
