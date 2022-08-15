@@ -17,7 +17,7 @@
     //"context": "..",
 
     "mounts": [
-        "source=/${localEnv:SSH_AUTH_SOCK},target=${localEnv:SSH_AUTH_SOCK},type=bind,consistency=cached,ro"
+        "source=/${localEnv:SSH_AUTH_SOCK:/dev/null},target=${localEnv:SSH_AUTH_SOCK:/dev/null},type=bind,consistency=cached,ro"
     ],
 
     // Stop the container from automatically shutting down when vscode is closed.
