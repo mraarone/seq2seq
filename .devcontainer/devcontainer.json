@@ -7,18 +7,9 @@
     "image": "mraarone/pytorch-devenv:latest",
     "runArgs": [
         "--gpus", "all",
-        // "-u", "${localEnv:UID}:${localEnv:GID}",
         "-e", "SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}",
         "-e", "GITCONFIG=${localEnv:GITCONFIG}"
     ],
-    // "postCreateCommand": "echo '${localEnv:USER} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers",
-    // "postCreateCommand": "git config --global --add safe.directory ${localWorkspaceFolder}",
-    // "postCreateCommand": "if [ \"\" != \"${localEnv:USER}\" ]; then groupadd ${localEnv:USER}; useradd -m -g ${localEnv:USER} ${localEnv:USER}; mkdir -p ${localEnv:HOME}; chown -R ${localEnv:USER}:${localEnv:USER} ${localEnv:HOME}; fi",
-
-    // "postCreateCommand": "if [ \"\" != \"${localEnv:USER}\" ]; then groupadd ${localEnv:USER}; useradd -m -k ~/ -g ${localEnv:USER} ${localEnv:USER}; fi",
-    // "postStartCommand":  "if [ \"\" != \"${localEnv:USER}\" ]; then su ${localEnv:USER} -c \"git config --global --add safe.directory /workspaces/seq2seq\"; fi",
-    // "postAttachCommand": "if [ \"\" != \"${localEnv:GITCONFIG}\" ]; then echo ${localEnv:GITCONFIG} >> ${localEnv:HOME}/.gitconfig; fi && if [ \"\" != \"${localEnv:USER}\" ]; then su -m ${localEnv:USER}; fi",
-
     "postAttachCommand": "if [ \"\" != \"${localEnv:GITCONFIG}\" ]; then echo ${localEnv:GITCONFIG} > ~/.gitconfig; else touch ~/.gitconfig; git config --global --add safe.directory /workspaces/seq2seq; fi",
 
     //// Consider moving to another devenv generation dockerfile for the CI/CD pipeline when the file changes.
@@ -26,18 +17,17 @@
     //"context": "..",
 
     "mounts": [
-        // "source=//var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached",
-        // "source=//etc/passwd,target=/etc/passwd,type=bind,consistency=cached,ro",
-        // "source=//etc/group,target=/etc/group,type=bind,consistency=cached,ro",
-        // "source=//etc/shadow,target=/etc/shadow,type=bind,consistency=cached,ro",
-        // "source=//etc/sudoers,target=/etc/sudoers,type=bind,consistency=cached,ro",
-        // "source=/${localEnv:HOME},target=${localEnv:HOME},type=bind,consistency=cached",
         "source=/${localEnv:SSH_AUTH_SOCK},target=${localEnv:SSH_AUTH_SOCK},type=bind,consistency=cached,ro"
     ],
 
     // Stop the container from automatically shutting down when vscode is closed.
     // stopContainer, stopCompose, and none are the three options. This saves files.
     "shutdownAction": "none",
+
+    // Set environment variables for VS Code and sub-processes
+    "remoteEnv": {
+        "JAVA_HOME": "/usr/lib/jvm/java-1.11.0-openjdk-amd64"
+    },
 
     // Default path to open when attaching to a new container.
     "workspaceFolder": "/workspaces/seq2seq",
@@ -55,10 +45,5 @@
         "GitHub.copilot",
         "mintlify.document",
         "eamodio.gitlens"
-    ],
-
-    // Set environment variables for VS Code and sub-processes
-    "remoteEnv": {
-        "JAVA_HOME": "/usr/lib/jvm/java-1.11.0-openjdk-amd64"
-    }
+    ]
 }
