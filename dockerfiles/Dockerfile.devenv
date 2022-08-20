@@ -1,4 +1,4 @@
-erFROM pytorch/pytorch
+FROM pytorch/pytorch
 
 # Install Docker for Docker-in-Docker
 RUN apt-get update && \
